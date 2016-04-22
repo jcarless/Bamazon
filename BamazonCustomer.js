@@ -15,20 +15,19 @@ con.connect(function (err) {
 	console.log('Your are connected');
 });
 
-con.query("select * from products", function(err, products){
+var menu = function(){
+
+	con.query("select * from products", function(err, products){
 	if (err) {
 		return err;
 	};
-
-
-
 
 	for (var i = 0; i < products.length; i++) {
 		console.log('Product ID: ' + products[i].ProductID + ', Product Name: ' + products[i].DepartmentName + ' ' + products[i].ProductName + ', Price: $' + products[i].Price);
 	console.log('------------------------------------------------------');
 	};
 
-	prompt.get(['ProductID', 'Quantity'], function (err, result) {
+	prompt.get(['ProductID', 'Quantity', 'Add_More'], function (err, result) {
 
     console.log('  ProductID: ' + result.ProductID);
     console.log('  Quantity: ' + result.Quantity);
@@ -54,12 +53,21 @@ con.query("select * from products", function(err, products){
 			if (err) {
 			return console.log(err);
 		}
-			console.log('sql updated');
-    	}) //query
+			if (result.Add_More == 'yes') {
+				menu();
+			}else{
+				console.log('Order Complete');
+			process.exit();
+		};
+    	}); //query
 
 
 
   }); //prompt
 
 }); //query
+}//function
+
+console.log('Welcome to Bamazon. Choose a product from our inventory:  ');
+menu();
 
